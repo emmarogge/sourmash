@@ -6,7 +6,7 @@ use std::path::PathBuf;
 
 use sourmash::cmd::ComputeParameters;
 use sourmash::signature::Signature;
-use sourmash::signature::SigsTrait;
+use sourmash::sketch::Sketch;
 
 #[test]
 fn load_signature() {

@@ -153,9 +153,9 @@ pub unsafe fn set_panic_hook() {
 
 pub unsafe fn landingpad<F, T>(f: F) -> T
 where
-    F: FnOnce() -> Result<T, Error> + panic::UnwindSafe,
+    F: FnOnce() -> Result<T, Error>, //+ panic::UnwindSafe,
 {
-    match panic::catch_unwind(f) {
+    match panic::catch_unwind(panic::AssertUnwindSafe(f)) {
         Ok(Ok(result)) => result,
         Ok(Err(err)) => {
             set_last_error(err);

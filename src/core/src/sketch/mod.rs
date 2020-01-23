@@ -9,6 +9,7 @@ use failure::Error;
 use crate::sketch::minhash::HashFunctions;
 
 //https://github.com/dtolnay/typetag
+//https://github.com/dtolnay/typetag/issues/10
 #[typetag::serde(tag = "type")]
 pub trait Sketch: DynClone {
     fn size(&self) -> usize;

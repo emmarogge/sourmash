@@ -11,7 +11,6 @@ use crate::cmd::ComputeParameters;
 use crate::ffi::utils::SourmashStr;
 use crate::signature::Signature;
 use crate::sketch::minhash::{HashFunctions, KmerMinHash};
-use crate::sketch::Sketch;
 
 // Signature methods
 
@@ -134,7 +133,7 @@ unsafe fn signature_push_mh(ptr: *mut Signature, other: *const KmerMinHash) ->
        &*other
     };
 
-    sig.signatures.push(Sketch::MinHash(mh.clone()));
+    sig.signatures.push(Box::new(mh.clone()));
     Ok(())
 }
 }
@@ -151,7 +150,7 @@ unsafe fn signature_set_mh(ptr: *mut Signature, other: *const KmerMinHash) ->
        &*other
     };
 
-    sig.signatures = vec![Sketch::MinHash(mh.clone())];
+    sig.signatures = vec![Box::new(mh.clone())];
     Ok(())
 }
 }
@@ -205,11 +204,7 @@ unsafe fn signature_first_mh(ptr: *mut Signature) -> Result<*mut KmerMinHash> {
     };
 
     if let Some(item) = sig.signatures.get(0) {
-        if let Sketch::MinHash(mh) = item {
-          Ok(Box::into_raw(Box::new(mh.clone())) as _)
-        } else {
-          unimplemented!()
-        }
+        Ok(Box::into_raw(Box::new(item.clone())) as _)
     } else {
         // TODO: need to select the correct one
         unimplemented!()
