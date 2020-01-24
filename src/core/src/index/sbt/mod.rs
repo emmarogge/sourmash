@@ -13,7 +13,7 @@ use std::collections::hash_map::Entry;
 use std::collections::{HashMap, HashSet};
 use std::fmt::Debug;
 use std::fs::File;
-use std::hash::{BuildHasherDefault, Hasher};
+use std::hash::BuildHasherDefault;
 use std::io::{BufReader, Read};
 use std::iter::FromIterator;
 use std::mem;
@@ -22,6 +22,7 @@ use std::rc::Rc;
 
 use failure::Error;
 use log::info;
+use nohash_hasher::NoHashHasher;
 use once_cell::sync::OnceCell;
 use serde_derive::{Deserialize, Serialize};
 use typed_builder::TypedBuilder;
@@ -640,32 +641,7 @@ enum SBTInfo {
     V4(SBTInfoV4<NodeInfoV4>),
 }
 
-// This comes from finch
-pub struct NoHashHasher(u64);
-
-impl Default for NoHashHasher {
-    #[inline]
-    fn default() -> NoHashHasher {
-        NoHashHasher(0x0)
-    }
-}
-
-impl Hasher for NoHashHasher {
-    #[inline]
-    fn write(&mut self, bytes: &[u8]) {
-        *self = NoHashHasher(
-            (u64::from(bytes[0]) << 24)
-                + (u64::from(bytes[1]) << 16)
-                + (u64::from(bytes[2]) << 8)
-                + u64::from(bytes[3]),
-        );
-    }
-    fn finish(&self) -> u64 {
-        self.0
-    }
-}
-
-type HashIntersection = HashSet<u64, BuildHasherDefault<NoHashHasher>>;
+type HashIntersection = HashSet<u64, BuildHasherDefault<NoHashHasher<u64>>>;
 
 enum BinaryTree {
     Empty,
