@@ -114,6 +114,12 @@
       "@id": "https://orcid.org/0000-0003-1313-7076",
       "givenName": "Ricky",
       "familyName": "Lim"
+    },
+    {
+      "@type": "Person",
+      "@id": "https://orcid.org/0000-0002-6930-0592",
+      "givenName": "Fabian",
+      "familyName": "Klötzl"
     }
   ]
 }
