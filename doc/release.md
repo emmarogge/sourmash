@@ -126,22 +126,14 @@ cd ../sourmash
 git tag -a v${new_version}
 ```
 
-2\. Publish the new release on PyPI (requires an authorized account).
-```
-make dist
-twine upload dist/sourmash-${new_version}.tar.gz
-```
-
-3\. Delete the release candidate tag and push the tag updates to GitHub:
+2\. Delete the release candidate tag and push the tag updates to GitHub:
 ```
 git tag -d v${new_version}${rc}
 git push --tags git@github.com:dib-lab/sourmash.git
 git push --delete git@github.com:dib-lab/sourmash.git v${new_version}${rc}
 ```
-4\. Add the release on GitHub, using the tag you just pushed.
-Name it 'version X.Y.Z', and copy and paste in the release notes.
 
-5\. Upload wheels from GitHub Releases to PyPI.
+3\. Upload wheels from GitHub Releases to PyPI.
 [`hub`](https://hub.github.com/) makes this easier,
 but you can also manually download all the files from [the releases page].
 ```
@@ -149,6 +141,16 @@ mkdir -p wheel && cd wheel
 hub release download v${new_version}
 twine upload *.whl
 ```
+
+4\. Publish the new release on PyPI (requires an authorized account).
+```
+cd ..
+make dist
+twine upload dist/sourmash-${new_version}.tar.gz
+```
+
+5\. Add the release on GitHub, using the tag you just pushed.
+Name it 'version X.Y.Z', and copy and paste in the release notes.
 
 ## Bioconda
 
@@ -163,6 +165,7 @@ If a bioinformatics software is released and no one tweets, is it really release
 
 Examples:
 
+- [3.2.0](https://twitter.com/luizirber/status/1221923762523623425)
 - [3.1.0](https://twitter.com/luizirber/status/1217639572202409984)
 - [3.0.0](https://twitter.com/luizirber/status/1213588144458649600)
 - [2.3.0](https://twitter.com/luizirber/status/1198027116396171264)
