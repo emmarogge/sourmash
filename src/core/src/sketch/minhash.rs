@@ -865,7 +865,7 @@ impl SigsTrait for KmerMinHash {
     }
 }
 
-struct Intersection<T, I: Iterator<Item = T>> {
+pub(crate) struct Intersection<T, I: Iterator<Item = T>> {
     iter: Peekable<I>,
     other: Peekable<I>,
 }
@@ -916,7 +916,7 @@ const COMPLEMENT: [u8; 256] = {
 };
 
 #[inline]
-fn revcomp(seq: &[u8]) -> Vec<u8> {
+pub(crate) fn revcomp(seq: &[u8]) -> Vec<u8> {
     seq.iter()
         .rev()
         .map(|nt| COMPLEMENT[*nt as usize])
@@ -1166,7 +1166,7 @@ pub(crate) fn aa_to_hp(aa: u8) -> u8 {
 }
 
 #[inline]
-fn to_aa(seq: &[u8], dayhoff: bool, hp: bool) -> Result<Vec<u8>, Error> {
+pub(crate) fn to_aa(seq: &[u8], dayhoff: bool, hp: bool) -> Result<Vec<u8>, Error> {
     let mut converted: Vec<u8> = Vec::with_capacity(seq.len() / 3);
 
     for chunk in seq.chunks(3) {
@@ -1187,7 +1187,7 @@ fn to_aa(seq: &[u8], dayhoff: bool, hp: bool) -> Result<Vec<u8>, Error> {
     Ok(converted)
 }
 
-const VALID: [bool; 256] = {
+pub(crate) const VALID: [bool; 256] = {
     let mut lookup = [false; 256];
     lookup[b'A' as usize] = true;
     lookup[b'C' as usize] = true;
