@@ -3,6 +3,7 @@ use failure::Error;
 use crate::index::MHBT;
 use crate::signature::Signature;
 use crate::sketch::minhash::{max_hash_for_scaled, HashFunctions, KmerMinHash};
+use crate::sketch::modhash::KmerModHash;
 use crate::sketch::Sketch;
 
 pub fn prepare(index_path: &str) -> Result<(), Error> {
@@ -56,6 +57,7 @@ pub struct ComputeParameters {
     pub license: String,
     pub input_is_10x: bool,
     pub processes: usize,
+    pub modhash: bool,
 }
 
 impl Default for ComputeParameters {
@@ -87,6 +89,7 @@ impl Default for ComputeParameters {
             license: "CC0".into(),
             input_is_10x: false,
             processes: 2,
+            modhash: false,
         }
     }
 }
@@ -100,63 +103,26 @@ pub fn build_template(params: &ComputeParameters) -> Vec<Sketch> {
         .flat_map(|k| {
             let mut ksigs = vec![];
 
+            let mut hash_functions = vec![];
             if params.protein {
-                ksigs.push(Sketch::MinHash(
-                    KmerMinHash::builder()
-                        .num(params.num_hashes)
-                        .ksize(*k)
-                        .hash_function(HashFunctions::murmur64_protein)
-                        .max_hash(max_hash)
-                        .seed(params.seed)
-                        .abunds(if params.track_abundance {
-                            Some(vec![])
-                        } else {
-                            None
-                        })
-                        .build(),
-                ));
+                hash_functions.push(HashFunctions::murmur64_protein);
             }
-
             if params.dayhoff {
-                ksigs.push(Sketch::MinHash(
-                    KmerMinHash::builder()
-                        .num(params.num_hashes)
-                        .ksize(*k)
-                        .hash_function(HashFunctions::murmur64_dayhoff)
-                        .max_hash(max_hash)
-                        .seed(params.seed)
-                        .abunds(if params.track_abundance {
-                            Some(vec![])
-                        } else {
-                            None
-                        })
-                        .build(),
-                ));
+                hash_functions.push(HashFunctions::murmur64_dayhoff);
             }
-
             if params.hp {
-                ksigs.push(Sketch::MinHash(
-                    KmerMinHash::builder()
-                        .num(params.num_hashes)
-                        .ksize(*k)
-                        .hash_function(HashFunctions::murmur64_hp)
-                        .max_hash(max_hash)
-                        .seed(params.seed)
-                        .abunds(if params.track_abundance {
-                            Some(vec![])
-                        } else {
-                            None
-                        })
-                        .build(),
-                ));
+                hash_functions.push(HashFunctions::murmur64_hp);
+            }
+            if params.dna {
+                hash_functions.push(HashFunctions::murmur64_DNA);
             }
 
-            if params.dna {
+            for hash_fn in hash_functions {
                 ksigs.push(Sketch::MinHash(
                     KmerMinHash::builder()
                         .num(params.num_hashes)
                         .ksize(*k)
-                        .hash_function(HashFunctions::murmur64_DNA)
+                        .hash_function(hash_fn)
                         .max_hash(max_hash)
                         .seed(params.seed)
                         .abunds(if params.track_abundance {
@@ -166,6 +132,22 @@ pub fn build_template(params: &ComputeParameters) -> Vec<Sketch> {
                         })
                         .build(),
                 ));
+
+                if params.modhash {
+                    ksigs.push(Sketch::ModHash(
+                        KmerModHash::builder()
+                            .mod_hash(params.scaled)
+                            .ksize(*k)
+                            .hash_function(hash_fn)
+                            .seed(params.seed)
+                            .abunds(if params.track_abundance {
+                                Some(vec![])
+                            } else {
+                                None
+                            })
+                            .build(),
+                    ));
+                }
             }
 
             ksigs

@@ -3,3 +3,6 @@ members = [
   "src/core",
 ]
 default-members = ["src/core"]
+
+[profile.release.build-override]
+opt-level = 0
