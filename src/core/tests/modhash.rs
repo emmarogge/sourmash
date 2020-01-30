@@ -4,7 +4,7 @@ use sourmash::sketch::modhash::KmerModHash;
 
 #[test]
 fn throws_error() {
-    let mut mh = KmerModHash::new(4, HashFunctions::murmur64_DNA, 42, 1, false);
+    let mut mh = KmerModHash::new(1, 4, HashFunctions::murmur64_DNA, 42, false);
 
     match mh.add_sequence(b"ATGR", false) {
         Ok(_) => assert!(false, "R is not a valid DNA character"),
@@ -14,8 +14,8 @@ fn throws_error() {
 
 #[test]
 fn merge() {
-    let mut a = KmerModHash::new(10, HashFunctions::murmur64_DNA, 42, 2, false);
-    let mut b = KmerModHash::new(10, HashFunctions::murmur64_DNA, 42, 2, false);
+    let mut a = KmerModHash::new(2, 10, HashFunctions::murmur64_DNA, 42, false);
+    let mut b = KmerModHash::new(2, 10, HashFunctions::murmur64_DNA, 42, false);
 
     a.add_sequence(b"TGCCGCCCAGCA", false).unwrap();
     b.add_sequence(b"TGCCGCCCAGCA", false).unwrap();
@@ -36,8 +36,8 @@ fn merge() {
 
 #[test]
 fn compare() {
-    let mut a = KmerModHash::new(10, HashFunctions::murmur64_DNA, 42, 21, false);
-    let mut b = KmerModHash::new(10, HashFunctions::murmur64_DNA, 42, 21, false);
+    let mut a = KmerModHash::new(21, 10, HashFunctions::murmur64_DNA, 42, false);
+    let mut b = KmerModHash::new(21, 10, HashFunctions::murmur64_DNA, 42, false);
 
     a.add_sequence(b"TGCCGCCCAGCACCGGGTGACTAGGTTGAGCCATGATTAACCTGCAATGA", false)
         .unwrap();
@@ -59,20 +59,20 @@ fn compare() {
 
 #[test]
 fn invalid_dna() {
-    let mut a = KmerModHash::new(3, HashFunctions::murmur64_DNA, 42, 1, false);
+    let mut a = KmerModHash::new(1, 3, HashFunctions::murmur64_DNA, 42, false);
 
     a.add_sequence(b"AAANNCCCTN", true).unwrap();
     assert_eq!(a.mins().len(), 3);
 
-    let mut b = KmerModHash::new(3, HashFunctions::murmur64_DNA, 42, 1, false);
+    let mut b = KmerModHash::new(1, 3, HashFunctions::murmur64_DNA, 42, false);
     b.add_sequence(b"NAAA", true).unwrap();
     assert_eq!(b.mins().len(), 1);
 }
 
 #[test]
 fn similarity() -> Result<(), Box<dyn std::error::Error>> {
-    let mut a = KmerModHash::new(20, HashFunctions::murmur64_hp, 42, 1, true);
-    let mut b = KmerModHash::new(20, HashFunctions::murmur64_hp, 42, 1, true);
+    let mut a = KmerModHash::new(1, 20, HashFunctions::murmur64_hp, 42, true);
+    let mut b = KmerModHash::new(1, 20, HashFunctions::murmur64_hp, 42, true);
 
     a.add_hash(1);
     b.add_hash(1);
@@ -86,8 +86,8 @@ fn similarity() -> Result<(), Box<dyn std::error::Error>> {
 
 #[test]
 fn similarity_2() -> Result<(), Box<dyn std::error::Error>> {
-    let mut a = KmerModHash::new(5, HashFunctions::murmur64_DNA, 42, 2, true);
-    let mut b = KmerModHash::new(5, HashFunctions::murmur64_DNA, 42, 2, true);
+    let mut a = KmerModHash::new(2, 5, HashFunctions::murmur64_DNA, 42, true);
+    let mut b = KmerModHash::new(2, 5, HashFunctions::murmur64_DNA, 42, true);
 
     a.add_sequence(b"ATGGA", false)?;
     a.add_sequence(b"GGACA", false)?;
@@ -106,8 +106,8 @@ fn similarity_2() -> Result<(), Box<dyn std::error::Error>> {
 
 #[test]
 fn similarity_3() -> Result<(), Box<dyn std::error::Error>> {
-    let mut a = KmerModHash::new(20, HashFunctions::murmur64_dayhoff, 42, 2, true);
-    let mut b = KmerModHash::new(20, HashFunctions::murmur64_dayhoff, 42, 2, true);
+    let mut a = KmerModHash::new(2, 20, HashFunctions::murmur64_dayhoff, 42, true);
+    let mut b = KmerModHash::new(2, 20, HashFunctions::murmur64_dayhoff, 42, true);
 
     a.add_hash(2);
     a.add_hash(2);
@@ -130,8 +130,8 @@ fn similarity_3() -> Result<(), Box<dyn std::error::Error>> {
 
 #[test]
 fn dayhoff() {
-    let mut a = KmerModHash::new(6, HashFunctions::murmur64_dayhoff, 42, 1, false);
-    let mut b = KmerModHash::new(6, HashFunctions::murmur64_protein, 42, 1, false);
+    let mut a = KmerModHash::new(1, 6, HashFunctions::murmur64_dayhoff, 42, false);
+    let mut b = KmerModHash::new(1, 6, HashFunctions::murmur64_protein, 42, false);
 
     a.add_sequence(b"ACTGAC", false).unwrap();
     b.add_sequence(b"ACTGAC", false).unwrap();
@@ -142,8 +142,8 @@ fn dayhoff() {
 
 #[test]
 fn hp() {
-    let mut a = KmerModHash::new(6, HashFunctions::murmur64_hp, 42, 1, false);
-    let mut b = KmerModHash::new(6, HashFunctions::murmur64_protein, 42, 1, false);
+    let mut a = KmerModHash::new(1, 6, HashFunctions::murmur64_hp, 42, false);
+    let mut b = KmerModHash::new(1, 6, HashFunctions::murmur64_protein, 42, false);
 
     a.add_sequence(b"ACTGAC", false).unwrap();
     b.add_sequence(b"ACTGAC", false).unwrap();

@@ -129,10 +129,10 @@ impl<'de> Deserialize<'de> for KmerModHash {
 
 impl KmerModHash {
     pub fn new(
+        mod_hash: u64,
         ksize: u32,
         hash_function: HashFunctions,
         seed: u64,
-        mod_hash: u64,
         track_abundance: bool,
     ) -> KmerModHash {
         let mins = Vec::with_capacity(1000);
@@ -366,10 +366,10 @@ impl KmerModHash {
         self.check_compatible(other)?;
 
         let mut combined_mh = KmerModHash::new(
+            self.mod_hash,
             self.ksize,
             self.hash_function,
             self.seed,
-            self.mod_hash,
             self.abunds.is_some(),
         );
 
@@ -391,10 +391,10 @@ impl KmerModHash {
         self.check_compatible(other)?;
 
         let mut combined_mh = KmerModHash::new(
+            self.mod_hash,
             self.ksize,
             self.hash_function,
             self.seed,
-            self.mod_hash,
             self.abunds.is_some(),
         );
 
