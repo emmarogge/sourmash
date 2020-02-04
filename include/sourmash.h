@@ -8,15 +8,14 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-enum HashFunctions {
+typedef enum {
   HASH_FUNCTIONS_MURMUR64_DNA = 1,
   HASH_FUNCTIONS_MURMUR64_PROTEIN = 2,
   HASH_FUNCTIONS_MURMUR64_DAYHOFF = 3,
   HASH_FUNCTIONS_MURMUR64_HP = 4,
-};
-typedef uint32_t HashFunctions;
+} HashFunctions;
 
-enum SourmashErrorCode {
+typedef enum {
   SOURMASH_ERROR_CODE_NO_ERROR = 0,
   SOURMASH_ERROR_CODE_PANIC = 1,
   SOURMASH_ERROR_CODE_INTERNAL = 2,
@@ -36,8 +35,7 @@ enum SourmashErrorCode {
   SOURMASH_ERROR_CODE_UTF8_ERROR = 100002,
   SOURMASH_ERROR_CODE_PARSE_INT = 100003,
   SOURMASH_ERROR_CODE_SERDE_ERROR = 100004,
-};
-typedef uint32_t SourmashErrorCode;
+} SourmashErrorCode;
 
 typedef struct ComputeParameters ComputeParameters;
 
