@@ -475,6 +475,8 @@ impl KmerMinHash {
         }
     }
 
+    // https://github.com/stepancheg/hashbrown/blob/d5cc5a8395801f9b9cdc761ff85688538d7c89ee/src/set.rs
+    // https://users.rust-lang.org/t/efficiently-computing-set-intersection-and-difference/37742
     pub fn intersection(&self, other: &KmerMinHash) -> Result<(Vec<u64>, u64), Error> {
         self.check_compatible(other)?;
 
