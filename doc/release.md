@@ -38,7 +38,6 @@ git push --tags git@github.com:dib-lab/sourmash.git
 
 3\. Test the release candidate. Bonus: repeat on macOS:
 ```
-set -e
 python -m pip install -U setuptools pip virtualenv wheel
 
 cd ..
@@ -53,7 +52,7 @@ cd testenv1
 source bin/activate
 git clone --depth 1 --branch v${new_version}${rc} https://github.com/dib-lab/sourmash.git
 cd sourmash
-python -m pip install -U setuptools pip
+python -m pip install -U setuptools pip wheel
 python -m pip install -r requirements.txt
 make test
 
@@ -62,7 +61,7 @@ make test
 cd ../../testenv2
 deactivate
 source bin/activate
-python -m pip install -U setuptools pip
+python -m pip install -U setuptools pip wheel
 python -m pip install -e git+https://github.com/dib-lab/sourmash.git@v${new_version}${rc}#egg=sourmash[test]
 cd src/sourmash
 make test
@@ -75,7 +74,7 @@ cp dist/sourmash*tar.gz ../../../testenv3/
 cd ../../../testenv3/
 deactivate
 source bin/activate
-python -m pip install -U setuptools pip
+python -m pip install -U setuptools pip wheel
 python -m pip install sourmash*tar.gz
 python -m pip install pytest
 tar xzf sourmash-${new_version}${rc}.tar.gz
