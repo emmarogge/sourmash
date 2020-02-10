@@ -18,6 +18,8 @@
 
 pub mod errors;
 
+pub mod cmd;
+
 pub mod index;
 
 pub mod signature;
@@ -34,8 +36,6 @@ cfg_if! {
         pub mod wasm;
     } else {
         pub mod ffi;
-
-        pub mod cmd;
     }
 }
 

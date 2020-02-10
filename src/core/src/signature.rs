@@ -15,6 +15,9 @@ use rayon::prelude::*;
 use serde_derive::{Deserialize, Serialize};
 use typed_builder::TypedBuilder;
 
+#[cfg(all(target_arch = "wasm32", target_vendor = "unknown"))]
+use wasm_bindgen::prelude::*;
+
 use crate::errors::SourmashError;
 use crate::index::storage::ToWriter;
 use crate::sketch::minhash::HashFunctions;
@@ -79,29 +82,30 @@ impl SigsTrait for Sketch {
     }
 }
 
+#[cfg_attr(all(target_arch = "wasm32", target_vendor = "unknown"), wasm_bindgen)]
 #[derive(Serialize, Deserialize, Debug, Clone, TypedBuilder)]
 pub struct Signature {
     #[serde(default = "default_class")]
     #[builder(default_code = "default_class()")]
-    pub class: String,
+    pub(crate) class: String,
 
     #[serde(default)]
     #[builder(default)]
-    pub email: String,
+    pub(crate) email: String,
 
-    pub hash_function: String,
+    pub(crate) hash_function: String,
 
     #[builder(default)]
-    pub filename: Option<String>,
+    pub(crate) filename: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
+    pub(crate) name: Option<String>,
 
     #[serde(default = "default_license")]
     #[builder(default_code = "default_license()")]
-    pub license: String,
+    pub(crate) license: String,
 
-    pub signatures: Vec<Sketch>,
+    pub(crate) signatures: Vec<Sketch>,
 
     #[serde(default = "default_version")]
     #[builder(default_code = "default_version()")]
