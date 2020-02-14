@@ -60,10 +60,19 @@ impl KmerMinHash {
 }
 
 #[wasm_bindgen]
+impl ComputeParameters {
+    #[wasm_bindgen(constructor)]
+    pub fn new_with_params() -> ComputeParameters {
+        let params = ComputeParameters::default();
+        params
+    }
+}
+
+#[wasm_bindgen]
 impl Signature {
     #[wasm_bindgen(constructor)]
-    pub fn new_from_params() -> Signature {
-        let params = ComputeParameters::default();
+    pub fn new_from_params(params: &ComputeParameters) -> Signature {
+        //let params = ComputeParameters::default();
 
         Signature::from_params(&params)
     }
@@ -78,4 +87,12 @@ impl Signature {
     pub fn to_json(&mut self) -> String {
         serde_json::to_string(self).unwrap()
     }
+}
+
+#[cfg(test)]
+mod test {
+    use wasm_bindgen_test::*;
+
+    #[wasm_bindgen_test]
+    fn wasm_test() {}
 }

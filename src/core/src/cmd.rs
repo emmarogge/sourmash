@@ -1,4 +1,6 @@
 use failure::Error;
+#[cfg(all(target_arch = "wasm32", target_vendor = "unknown"))]
+use wasm_bindgen::prelude::*;
 
 use crate::index::MHBT;
 use crate::signature::Signature;
@@ -29,32 +31,33 @@ impl Signature {
     }
 }
 
+#[cfg_attr(all(target_arch = "wasm32", target_vendor = "unknown"), wasm_bindgen)]
 pub struct ComputeParameters {
-    pub ksizes: Vec<u32>,
-    pub check_sequence: bool,
-    pub dna: bool,
-    pub dayhoff: bool,
-    pub hp: bool,
-    pub singleton: bool,
-    pub count_valid_reads: usize,
-    pub barcodes_file: Option<String>, // TODO: check
-    pub line_count: usize,
-    pub rename_10x_barcodes: Option<bool>,    // TODO: check
-    pub write_barcode_meta_csv: Option<bool>, // TODO: check
-    pub save_fastas: Option<bool>,            // TODO: check
-    pub scaled: u64,
-    pub force: bool,
-    pub output: Option<String>, // TODO: check
-    pub num_hashes: u32,
-    pub protein: bool,
-    pub name_from_first: bool,
-    pub seed: u64,
-    pub input_is_protein: bool,
-    pub merge: Option<String>,
-    pub track_abundance: bool,
-    pub randomize: bool,
-    pub license: String,
-    pub input_is_10x: bool,
+    pub(crate) ksizes: Vec<u32>,
+    pub(crate) check_sequence: bool,
+    pub(crate) dna: bool,
+    pub(crate) dayhoff: bool,
+    pub(crate) hp: bool,
+    pub(crate) singleton: bool,
+    pub(crate) count_valid_reads: usize,
+    pub(crate) barcodes_file: Option<String>, // TODO: check
+    pub(crate) line_count: usize,
+    pub(crate) rename_10x_barcodes: Option<bool>, // TODO: check
+    pub(crate) write_barcode_meta_csv: Option<bool>, // TODO: check
+    pub(crate) save_fastas: Option<bool>,         // TODO: check
+    pub(crate) scaled: u64,
+    pub(crate) force: bool,
+    pub(crate) output: Option<String>, // TODO: check
+    pub(crate) num_hashes: u32,
+    pub(crate) protein: bool,
+    pub(crate) name_from_first: bool,
+    pub(crate) seed: u64,
+    pub(crate) input_is_protein: bool,
+    pub(crate) merge: Option<String>,
+    pub(crate) track_abundance: bool,
+    pub(crate) randomize: bool,
+    pub(crate) license: String,
+    pub(crate) input_is_10x: bool,
     pub processes: usize,
 }
 
